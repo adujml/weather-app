@@ -11,17 +11,16 @@ class Display extends React.Component {
     }
 
     render(){
-        const temp = this.props.tempData.tempInCelsius;
-        const URL = this.props.tempData.iconURL
+        const tempData = this.props.tempData;
 
         return(
             <div className="Display">
                 <div className="icon">
                     {
-                        (!URL)?
-                        <Spinner type="grow" color="dark"/>:
+                        (!tempData.iconURL)?
+                        <Spinner type="grow" color="dark"/> :
                         <img 
-                            src={this.props.tempData.iconURL} 
+                            src={tempData.iconURL} 
                             alt="placeholder"  
                             height="100%"
                             width="100%"
@@ -31,9 +30,11 @@ class Display extends React.Component {
                 <div className="temperature">
                     <h1>
                         {
-                            (temp===null)?
+                            (tempData.tempInCelsius===null)?
                             "?" :
-                            (this.state.showCelsius)? temp : Math.round(((temp*1.8)+32) * 10) / 10
+                            (this.state.showCelsius)? 
+                            tempData.tempInCelsius : 
+                            Math.round(((tempData.tempInCelsius*1.8)+32) * 10) / 10
                         }
                     </h1>
                     <Button color="light" 
@@ -43,9 +44,9 @@ class Display extends React.Component {
                     </Button>
                 </div>
                 <div className="details">
-                    <p>Pressure: {this.props.tempData.pressure} mb</p>
-                    <p>Humidity: {this.props.tempData.humidity}%</p>
-                    <p>Wind: {this.props.tempData.wind} km/h</p>
+                    <p>Pressure: {tempData.pressure} mb</p>
+                    <p>Humidity: {tempData.humidity}%</p>
+                    <p>Wind: {tempData.wind} km/h</p>
                 </div>
             </div>
         )

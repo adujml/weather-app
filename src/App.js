@@ -13,6 +13,10 @@ class App extends React.Component{
     this.state = {
       userInput: String(null),
       isLoading: false,
+      error: {
+        state: false,
+        input: '',
+      },
       tempData: {
         location: '',
         tempInCelsius: Number(null),
@@ -38,29 +42,34 @@ class App extends React.Component{
 
     this.setState({
       isLoading: true,
+      error: {
+        state: false,
+      },
     })
 
     axios.get(URL)
       .then(res => {
-        const result = res.data;
+        const data = res.data;
         this.setState({
           isLoading: false,
           tempData: {
-            location: result.name,
-            tempInCelsius: (Math.round((result.main.temp-273) * 10) / 10),
-            pressure: result.main.pressure,
-            humidity: result.main.humidity,
-            wind: result.wind.speed,
-            iconURL:'http://openweathermap.org/img/wn/'+result.weather[0].icon+'.png',
+            location: data.name,
+            tempInCelsius: (Math.round((data.main.temp-273) * 10) / 10),
+            pressure: data.main.pressure,
+            humidity: data.main.humidity,
+            wind: data.wind.speed,
+            iconURL:'http://openweathermap.org/img/wn/'+data.weather[0].icon+'.png',
           },
         })
       })
       .catch(err => {
-        // handle error
         this.setState({
           isLoading: false,
+          error: {
+            state: true,
+            input: this.state.userInput,
+          },
         })   
-        console.log("YOUR ERROR IS: " + err);
       })
 
     event.preventDefault();
@@ -69,13 +78,14 @@ class App extends React.Component{
   render(){
     return (
         <div className="App">
-          <h1>Location: {this.state.tempData.location} </h1>
           <Display tempData={this.state.tempData}/>
           <Search 
             handleChange={this.handleChange}
             handleSubmit={this.handleSubmit}
             defaultValue={this.state.tempData.location}
             isLoading={this.state.isLoading}
+            error={this.state.error}
+            userInput={this.state.userInput}
           />
         </div>
     )

@@ -11,13 +11,15 @@ class App extends React.Component{
     super(props);
 
     this.state = {
-      value: String(null),
+      userInput: String(null),
+      isLoading: false,
       tempData: {
-        location: String(null),
+        location: '',
         tempInCelsius: Number(null),
         pressure: Number(null),
         humidity: Number(null),
         wind: Number(null),
+        iconURL: '',
       },
     }
 
@@ -26,26 +28,39 @@ class App extends React.Component{
   }
 
   handleChange(event) {
-      this.setState({value: event.target.value});
+      this.setState({userInput: event.target.value});
   }
 
   handleSubmit(event) {
     const URL = "https://api.openweathermap.org/data/2.5/weather?q="
-                +this.state.value
+                +this.state.userInput
                 +"&appid=db8bbec5dab9aa4c18f73e7b272166db"
+
+    this.setState({
+      isLoading: true,
+    })
 
     axios.get(URL)
       .then(res => {
         const result = res.data;
         this.setState({
+          isLoading: false,
           tempData: {
             location: result.name,
             tempInCelsius: (Math.round((result.main.temp-273) * 10) / 10),
             pressure: result.main.pressure,
             humidity: result.main.humidity,
             wind: result.wind.speed,
+            iconURL:'http://openweathermap.org/img/wn/'+result.weather[0].icon+'.png',
           },
         })
+      })
+      .catch(err => {
+        // handle error
+        this.setState({
+          isLoading: false,
+        })   
+        console.log("YOUR ERROR IS: " + err);
       })
 
     event.preventDefault();
@@ -59,7 +74,8 @@ class App extends React.Component{
           <Search 
             handleChange={this.handleChange}
             handleSubmit={this.handleSubmit}
-            value={this.state.value}
+            defaultValue={this.state.tempData.location}
+            isLoading={this.state.isLoading}
           />
         </div>
     )

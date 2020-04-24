@@ -36,10 +36,19 @@
     justify-content: inherit;
 }
 
+.Display .icon :first-child:not(img){
+    margin-top: 50px;
+}
+
 /* SEARCH */
 .Search {
     max-width: 60%;
     margin: 20px auto;
+    text-align: center;
+}
+
+.Search .hide {
+    display: none;
 }
 
 .Search Input{

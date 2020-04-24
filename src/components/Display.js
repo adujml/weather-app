@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button} from 'reactstrap';
+import {Button, Spinner} from 'reactstrap';
 
 class Display extends React.Component {
     constructor(props){
@@ -12,16 +12,21 @@ class Display extends React.Component {
 
     render(){
         const temp = this.props.tempData.tempInCelsius;
+        const URL = this.props.tempData.iconURL
 
         return(
             <div className="Display">
                 <div className="icon">
-                    <img 
-                        src="assets/img/partly_cloudy.png" 
-                        alt="placeholder"  
-                        height="100%" 
-                        width="100%"
-                    />
+                    {
+                        (!URL)?
+                        <Spinner type="grow" color="dark"/>:
+                        <img 
+                            src={this.props.tempData.iconURL} 
+                            alt="placeholder"  
+                            height="100%"
+                            width="100%"
+                        />
+                    }
                 </div>
                 <div className="temperature">
                     <h1>
@@ -38,9 +43,9 @@ class Display extends React.Component {
                     </Button>
                 </div>
                 <div className="details">
-                    <p>Pressure: {this.props.tempData.pressure}</p>
-                    <p>Humidity: {this.props.tempData.humidity}</p>
-                    <p>Wind: {this.props.tempData.wind}</p>
+                    <p>Pressure: {this.props.tempData.pressure} mb</p>
+                    <p>Humidity: {this.props.tempData.humidity}%</p>
+                    <p>Wind: {this.props.tempData.wind} km/h</p>
                 </div>
             </div>
         )
